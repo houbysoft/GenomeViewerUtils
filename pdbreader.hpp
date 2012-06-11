@@ -41,6 +41,8 @@ struct pdb_element_list {
 };
 
 extern struct pdb_element *nextPDBElement(FILE *f);
+
+// reads in the specified PDB file. rescaling_factor, mx, my, mz are optional; if not specified, the model will be scaled automatically
 extern struct pdb_element_list *readPDBFile(char *fn, double rescaling_factor, double mx, double my, double mz);
 
 extern void readLengthFile(char *fn, std::vector<unsigned int> &lengths_bp);
