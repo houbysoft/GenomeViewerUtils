@@ -17,36 +17,33 @@
 /*     <http://www.gnu.org/licenses/>.                                        */
 
 
-#ifndef PDBREADER_HPP
-#define PDBREADER_HPP
+#include "chrs.hpp"
 
-#include <math.h> // for sqrt
-#include <stdio.h>
-#include <vector>
 
-#define chainid_to_chromosome(cid) ((unsigned int)(cid - 64)) // ASCII value of 'A', which represents the first chromosome, is 65, thus 65-64 = 1 = chromosome number
+unsigned int chrsCount(struct pdb_element_list *data, std::vector<float> &lengths) {
+  struct pdb_element_list *cr = data;
+  char chain = cr->e->chainid;
+  while (cr->next) {
+    if (chain != cr->next->e->chainid) {
+      lengths.push_back(cr->e->tdist);
+      chain = cr->next->e->chainid;
+    }
+    cr = cr->next;
+  }
+  lengths.push_back(cr->e->tdist);
+  return lengths.size();
+}
 
-#define LINE_LENGTH 128
-#define pdb_el_distance(a,b) sqrt(pow(a->coords[0] - b->coords[0], 2) + pow(a->coords[1] - b->coords[1], 2) + pow(a->coords[2] - b->coords[2], 2))
 
-struct pdb_element {
-  int id;
-  char name;
-  char chainid;
-  float coords[3];
-  float tdist; // total distance from beginning of chromosome, calculated from coords across all elements of one chromosome
-};
+void createColors(std::vector<VColor> &colors, unsigned int chromosome_count) {
+  colors.clear();
+  VColor current;
+  float hue_step = 360.0 / float(chromosome_count);
+  float cur_hue = 0;
+  for (unsigned int i=0; i < chromosome_count; i++) {
+    current.setHSV(cur_hue, 1.0, 1.0);
+    colors.push_back(current);
+    cur_hue += hue_step;
+  }
+}
 
-struct pdb_element_list {
-  struct pdb_element *e;
-  struct pdb_element_list *next;
-};
-
-extern struct pdb_element *nextPDBElement(FILE *f);
-
-// reads in the specified PDB file. rescaling_factor, mx, my, mz are optional; if not specified, the model will be scaled automatically
-extern struct pdb_element_list *readPDBFile(char *fn, double rescaling_factor, double mx, double my, double mz);
-
-extern void readLengthFile(char *fn, std::vector<unsigned int> &lengths_bp);
-
-#endif

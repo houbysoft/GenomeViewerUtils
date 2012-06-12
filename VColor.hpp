@@ -17,36 +17,24 @@
 /*     <http://www.gnu.org/licenses/>.                                        */
 
 
-#ifndef PDBREADER_HPP
-#define PDBREADER_HPP
+#ifndef VCOLOR_HPP
+#define VCOLOR_HPP
 
-#include <math.h> // for sqrt
-#include <stdio.h>
-#include <vector>
+class VColor {
+public:
+  float r, g, b;
 
-#define chainid_to_chromosome(cid) ((unsigned int)(cid - 64)) // ASCII value of 'A', which represents the first chromosome, is 65, thus 65-64 = 1 = chromosome number
+  /* Operators */
+  VColor& operator*=(float ratio);
+  VColor operator*(float right);
 
-#define LINE_LENGTH 128
-#define pdb_el_distance(a,b) sqrt(pow(a->coords[0] - b->coords[0], 2) + pow(a->coords[1] - b->coords[1], 2) + pow(a->coords[2] - b->coords[2], 2))
+  void setRGB(float, float, float);
+  void setHSV(float, float, float);
+  char *html(); // returns a HTML-like representation of the color, for example #00FF00. The string is malloc()'d, the caller should free() it.
 
-struct pdb_element {
-  int id;
-  char name;
-  char chainid;
-  float coords[3];
-  float tdist; // total distance from beginning of chromosome, calculated from coords across all elements of one chromosome
+  VColor(float r1=0, float g1=0, float b1=0);
+
+  ~VColor() {};
 };
-
-struct pdb_element_list {
-  struct pdb_element *e;
-  struct pdb_element_list *next;
-};
-
-extern struct pdb_element *nextPDBElement(FILE *f);
-
-// reads in the specified PDB file. rescaling_factor, mx, my, mz are optional; if not specified, the model will be scaled automatically
-extern struct pdb_element_list *readPDBFile(char *fn, double rescaling_factor, double mx, double my, double mz);
-
-extern void readLengthFile(char *fn, std::vector<unsigned int> &lengths_bp);
 
 #endif
