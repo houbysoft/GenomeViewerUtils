@@ -46,7 +46,7 @@ void VColor::setRGB(float r1, float g1, float b1) {
 
 char *VColor::html() {
   char *res = (char*)malloc(8);
-  sprintf(res, "#%X%X%X", int(floor(r * 255 + 0.5)), int(floor(g * 255 + 0.5)), int(floor(b * 255 + 0.5)));
+  sprintf(res, "#%02X%02X%02X", int(floor(r * 255 + 0.5)), int(floor(g * 255 + 0.5)), int(floor(b * 255 + 0.5)));
   return res;
 }
 
