@@ -19,4 +19,6 @@
 
 #include "annotationreader.hpp"
 
-std::vector<struct gene> *Visualizer::searchGenes(std::vector<struct gene> *genes, char *q, unsigned int chr, bool sgid, bool ft_name, bool ft_qual, bool std_name, bool alias, bool sgid2, bool desc);
+#define SEARCH_GENES_LIMIT 100
+
+std::vector<struct gene> *searchGenes(std::vector<struct gene> *genes, char *q, unsigned int chr, bool sgid, bool ft_name, bool ft_qual, bool std_name, bool alias, bool sgid2, bool desc);
