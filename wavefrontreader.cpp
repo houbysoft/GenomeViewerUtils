@@ -19,6 +19,7 @@
 
 #include <fstream>
 #include <iostream>
+#include <GL/gl.h>
 #include "wavefrontreader.hpp"
 
 
@@ -44,6 +45,24 @@ WFReader::WFReader(char *filename) {
         std::cout << "Could not open WFObject file '" << filename << "'\n";
         throw;
     }
+}
+
+
+void WFReader::draw() {
+    glBegin(GL_TRIANGLES);
+
+    for(unsigned int f = 0; f < faces.size(); f++) {
+        glNormal3f(normals[faces[f].vn1 - 1].x, normals[faces[f].vn1 - 1].y, normals[faces[f].vn1 - 1].z);
+        glVertex3f(vertices[faces[f].v1 - 1].x, vertices[faces[f].v1 - 1].y, vertices[faces[f].v1 - 1].z);
+        
+        glNormal3f(normals[faces[f].vn2 - 1].x, normals[faces[f].vn2 - 1].y, normals[faces[f].vn2 - 1].z);
+        glVertex3f(vertices[faces[f].v2 - 1].x, vertices[faces[f].v2 - 1].y, vertices[faces[f].v2 - 1].z);
+        
+        glNormal3f(normals[faces[f].vn3 - 1].x, normals[faces[f].vn3 - 1].y, normals[faces[f].vn3 - 1].z);
+        glVertex3f(vertices[faces[f].v3 - 1].x, vertices[faces[f].v3 - 1].y, vertices[faces[f].v3 - 1].z);
+    }
+
+    glEnd();
 }
 
 
